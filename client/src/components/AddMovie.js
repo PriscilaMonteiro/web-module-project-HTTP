@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import React, { useState, useEffect} from 'react';
+import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import axios from 'axios';
 
-const EditMovieForm = (props) => {
-	const { push } = useHistory();
-	const { id } = useParams();
+const AddMovie= (props) => {
+
+  const { push } = useHistory();
 
 	const [movie, setMovie] = useState({
 		title:"",
@@ -24,28 +24,28 @@ const EditMovieForm = (props) => {
         });
   }
 
-	useEffect(()=> {
-    axios.get(`http://localhost:5000/api/movies/${id}`)
-      .then(res=> {
-        setMovie(res.data);
-      })
-      .catch(err=>{
-        console.log(err.response);
-      });
-  }, []);
-
   const handleSubmit = (e) => {
 		e.preventDefault();
-		axios.put(`http://localhost:5000/api/movies/${id}`, movie)
+		axios.post(`http://localhost:5000/api/movies`, movie)
       .then(res=> {
         props.setMovies(res.data);
-				push(`/movies/${id}`);
+				push(`/movies`);
       })
       .catch(err=>{
         console.log(err.response);
       });
   };
 	
+// app.post("/api/movies", (req, res) => {
+  // if (req.body.title !== undefined) {
+  //   const newMovie = req.body;
+  //   newMovie["id"] = movieId;
+  //   movies.push(newMovie);
+  // }
+  // ++movieId;
+  // res.status(201).json(movies);
+// });
+
 	const { title, director, genre, metascore, description } = movie;
 
     return (
@@ -53,7 +53,7 @@ const EditMovieForm = (props) => {
 		<div className="modal-content">
 			<form onSubmit={handleSubmit}>
 				<div className="modal-header">						
-					<h4 className="modal-title">Editing <strong>{movie.title}</strong></h4>
+					<h4 className="modal-title">Adding <strong>{movie.title}</strong></h4>
 				</div>
 				<div className="modal-body">					
 					<div className="form-group">
@@ -87,13 +87,20 @@ const EditMovieForm = (props) => {
 	</div>);
 }
 
-export default EditMovieForm;
+export default AddMovie
 
 
 
+// #### Adding a Movie
 
+// > _Alright! You ready! Let's see you use the skills of the previous steps to build a crud function from start to finish._
 
+// - [ ] Use `EditMovieForm.js` as a model to build an `AddMovieForm` component from scratch. The component should hold all the attributes of a new movie in local state.
 
+// - [ ] Add in a route that allows access to `AddMovieForm`.
 
+// - [ ] Locate the part of the ui that should redirect to your new `AddMovieForm`. Make that button works as expected.
 
+// - [ ] In `AddMovieForm,` add an event handler for form submission. When the form is submitted, run the approprate request for adding a movie with the component's state values.
 
+// - [ ] Make sure your component has access to and runs and modifications needed to global state and redirects to `/movies` after creation.
